@@ -37,7 +37,9 @@ export default function AppShell() {
               alt="Wayam"
               className="h-6 w-auto"
             />
-            <span className="font-semibold text-sm text-muted-foreground">AIOps Dashboard</span>
+            <span className="hidden sm:inline font-semibold text-sm text-muted-foreground">
+              AIOps Dashboard
+            </span>
           </div>
           <div className="flex items-center gap-2">
             {user && (

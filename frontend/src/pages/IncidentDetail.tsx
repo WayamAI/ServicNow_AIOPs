@@ -54,7 +54,7 @@ export default function IncidentDetail() {
 
   if (isLoading) {
     return (
-      <div className="p-6 space-y-4">
+      <div className="p-4 sm:p-6 space-y-4">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-24 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -64,7 +64,7 @@ export default function IncidentDetail() {
 
   if (!incident) {
     return (
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <p className="text-muted-foreground">Incident not found.</p>
         <Button variant="ghost" onClick={() => navigate('/incidents')} className="mt-4">
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -77,7 +77,7 @@ export default function IncidentDetail() {
   const sortedRuns = [...incident.runs].sort((a, b) => a.run_number - b.run_number);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">

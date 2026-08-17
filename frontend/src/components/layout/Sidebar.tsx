@@ -19,7 +19,12 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  // Default to the icon-only rail on narrow viewports so the sidebar
+  // doesn't eat most of the screen on tablet/mobile; desktop still opens
+  // expanded. The user's manual toggle always wins after that.
+  const [collapsed, setCollapsed] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 768
+  );
 
   return (
     <aside
