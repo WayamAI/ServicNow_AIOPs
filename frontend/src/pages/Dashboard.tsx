@@ -161,11 +161,11 @@ export default function Dashboard() {
             <div className="text-sm space-y-1">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Containers</span>
-                <span>{monitorStatus?.monitored_containers ?? '-'}</span>
+                <span>{monitorStatus?.monitored_containers ?? 0}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Active Incidents</span>
-                <span>{monitorStatus?.active_incidents ?? '-'}</span>
+                <span>{monitorStatus?.active_incidents ?? 0}</span>
               </div>
               {monitorStatus?.last_check && (
                 <div className="flex justify-between">
