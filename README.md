@@ -1,6 +1,6 @@
-# ServiceNow AIOPs Agent Server
+# Wayam AIOps
 
-Automated Docker container incident detection, diagnosis, and remediation using LangGraph multi-agent orchestration.
+Automated Docker container incident detection, diagnosis, and remediation using LangGraph multi-agent orchestration. Backend agent server plus a React dashboard, rebranded for Wayam.
 
 ## Overview
 
@@ -108,6 +108,36 @@ uv run uvicorn main:app --reload
 ```
 
 API docs: http://localhost:8000/docs
+
+### Seed demo data (optional)
+
+Populates realistic incidents (every status/severity) and monitored containers
+without requiring Azure OpenAI credentials — useful for a quick demo:
+
+```bash
+uv run python scripts/seed_demo_data.py
+```
+
+## Frontend
+
+React + Vite dashboard in `frontend/`, proxying `/api` to the backend on port 8000.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Opens on http://localhost:5173 (falls back to the next free port if taken).
+
+### Demo authentication
+
+The frontend ships with a demo auth layer, not a production identity provider:
+any syntactically valid email (`you@example.com`) with any non empty password
+signs in. The session persists in `localStorage` across refreshes and clears
+on logout. See `frontend/src/context/AuthContext.tsx` — swapping in real auth
+later only means changing the body of `login()`, the rest of the app is
+already gated behind `ProtectedRoute`.
 
 ## Pipeline
 

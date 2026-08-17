@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
 const AUTH_STORAGE_KEY = 'wayam_auth_session';
@@ -21,6 +21,18 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function readStoredUser(): AuthUser | null {
+  try {
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (!stored) return null;
+    const parsed = JSON.parse(stored) as AuthUser;
+    return parsed?.email ? parsed : null;
+  } catch {
+    // Corrupt or foreign localStorage value — treat as logged out.
+    return null;
+  }
+}
+
 /**
  * Demo authentication layer.
  *
@@ -32,22 +44,12 @@ function isValidEmail(email: string) {
  * requires changing the body of `login`, not any consuming component.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as AuthUser;
-        if (parsed?.email) setUser(parsed);
-      }
-    } catch {
-      // Corrupt or foreign localStorage value — treat as logged out.
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  // localStorage reads are synchronous, so restoring the session belongs
+  // in the lazy initializer rather than an effect + setState round trip —
+  // isLoading is always false here, kept in the public shape only so a
+  // future async auth check can flip it without changing callers.
+  const [user, setUser] = useState<AuthUser | null>(readStoredUser);
+  const [isLoading] = useState(false);
 
   const login = useCallback(async (email: string, password: string) => {
     const trimmedEmail = email.trim();
