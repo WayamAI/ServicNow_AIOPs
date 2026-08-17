@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 import Sidebar from './Sidebar';
 import LivePanel from './LivePanel';
 import StatusBar from './StatusBar';
@@ -13,11 +14,18 @@ export default function AppShell() {
     const stored = localStorage.getItem('theme');
     return stored ? stored === 'dark' : true;
   });
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
     localStorage.setItem('theme', dark ? 'dark' : 'light');
   }, [dark]);
+
+  function handleLogout() {
+    logout();
+    navigate('/login', { replace: true });
+  }
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -31,14 +39,31 @@ export default function AppShell() {
             />
             <span className="font-semibold text-sm text-muted-foreground">AIOps Dashboard</span>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setDark(!dark)}
-            className="h-8 w-8"
-          >
-            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
+          <div className="flex items-center gap-2">
+            {user && (
+              <span className="hidden sm:inline text-xs text-muted-foreground max-w-[10rem] truncate">
+                {user.email}
+              </span>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setDark(!dark)}
+              className="h-8 w-8"
+              title={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+            >
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="h-8 w-8"
+              title="Log out"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </header>
 
         {/* 3-column layout */}
