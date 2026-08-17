@@ -1,0 +1,38 @@
+[project]
+name = "servicenow-aiops"
+version = "0.1.0"
+description = "AIOPs agent-server for Docker container incident remediation"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "langchain>=0.3.0",
+    "langchain-openai>=0.3.0",
+    "langgraph>=0.4.0",
+    "python-dotenv>=1.1.0",
+    "structlog>=24.0.0",
+    "sse-starlette>=2.0.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.0",
+    "black>=24.0.0",
+    "pytest>=8.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff.lint.per-file-ignores]
+"src/tools/*.py" = [
+    "S603",   # subprocess call with untrusted input – intentional CLI wrapper
+    "S607",   # starting a process with partial executable path – intentional
+]
